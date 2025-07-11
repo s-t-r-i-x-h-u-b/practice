@@ -3,83 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Task Board</title>
 </head>
 
 <body>
-  <style>
-    .board {
-      margin: 5px;
-      display: flex;
-      flex-wrap: wrap;
-      text-align: center;
-      border: 1px solid black;
-    }
-    .board_name {
-      margin: 0;
-      width: 100%;
-      background-color: #f5f5f5;
-    }
-    .task {
-      margin: 5px;
-      border: 1px solid black;
-      min-height: 100px;
-      min-width: 100px;
-    }
-    .task_name {
-      margin: 0;
-      background-color: #f5f5f5;
-    }
-  </style>
-
   <section id="board_section"></section>
 
-  <section>
-    <button id="add_board">Новая доска</button>
-
-    <script>
-      const button_add_board = document.getElementById("add_board");
-      const board = document.getElementById("board_section");
-      button_add_board.onclick = function() {
-        let name = prompt('Введите название доски', '');
-        board.insertAdjacentHTML("afterbegin", '<div class="board" id="'+ name +'"><h2 class="board_name">Доска '+ name +'</h2></div>');
-      };
-    </script>
-
-    <button id="add_task">Новая задача</button>
-    <script>
-      const button_add_task = document.getElementById("add_task");
-      button_add_task.onclick = function() {
-        let board_name = prompt('Введите название доски', '');
-        let task_name = prompt('Введите название задачи', '');
-        let task_info = prompt('Добавьте описание задачи', '');
-        let board = document.getElementById(board_name);
-        board.insertAdjacentHTML("beforeend",
-        '<div class="task" id="'+ board_name + task_name +'"><h4 class="task_name">'+ 
-          task_name +'</h4><p>'+ task_info +'</p></div>');
-      };
-    </script>
-
-    <button id="del_board">Удалить доску</button>
-    <script>
-      const button_del_board = document.getElementById("del_board");
-      button_del_board.onclick = function() {
-        let board_name = prompt('Введите название доски', '');
-        let del = document.getElementById(board_name);
-        del.remove();
-      };
-    </script>
-
-    <button id="del_task">Удалить задачу</button>
-    <script>
-      const button_del_task = document.getElementById("del_task");
-      button_del_task.onclick = function() {
-        let board_name = prompt('Введите название доски', '');
-        let task_name = prompt('Введите название задачи', '');
-        let del = document.getElementById(board_name + task_name);
-        del.remove();
-      };
-    </script>
+  <section class="menu">
+    <button id="dropdown">
+      <img src="https://img.icons8.com/ios-glyphs/30/plus-math.png" />
+    </button>
+    <div class="dropdown">
+      <button id="add_board">
+        <img src="https://img.icons8.com/dotty/80/noticeboard.png" />
+      </button>
+      <button id="add_task">
+        <img src="https://img.icons8.com/ios/50/note.png" />
+      </button>
+      <button id="del_board">
+        <img src="https://img.icons8.com/dotty/80/delete-property.png" />
+      </button>
+      <button id="del_task">
+        <img src="https://img.icons8.com/windows/32/remove-document.png" />
+      </button>
+      <button id="del_all">
+        <img src="https://img.icons8.com/ios/50/delete-forever--v1.png" />
+      </button>
+    </div>
   </section>
+
+  <script src="app.js"></script>
 </body>
 </html>
