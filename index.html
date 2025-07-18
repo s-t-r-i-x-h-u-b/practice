@@ -3,28 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/styles/style.css">
   <title>Task Board</title>
 </head>
 
 <body>
+  <header>
+    <input type="text" id="searchInput" aria-label="Поиск задач">
+    <button id="theme">Переключение темы</button>
+  </header>
+
+  <main>
   <section class="board_section" id="board_section"></section>
 
   <section class="menu">
-    <button class="button" id="dropdown">
-      <img src="https://img.icons8.com/ios-glyphs/30/plus-math.png" alt="dropdown menu button"/>
+    <button class="button" id="dropdown" aria-label="Открыть меню">
+      <img src="https://img.icons8.com/ios-glyphs/30/plus-math.png" alt=""/>
     </button>
     <div class="dropdown">
-      <button class="button" id="add_board">
-        <img src="https://img.icons8.com/dotty/80/noticeboard.png" alt="add board button"/>
+      <button class="button" id="add_board" aria-label="Добавить новую доску">>
+        <img src="https://img.icons8.com/dotty/80/noticeboard.png" alt=""/>
       </button>
-      <button class="button" id="del_all">
-        <img src="https://img.icons8.com/ios/50/delete-forever--v1.png" alt="delete all elements"/>
+      <button class="button" id="del_all" aria-label="Удалить все доски и задачи">
+        <img src="https://img.icons8.com/ios/50/delete-forever--v1.png" alt=""/>
       </button>
     </div>
   </section>
+  </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.js" integrity="sha512-qRj8N7fxOHxPkKjnQ9EJgLJ8Ng1OK7seBn1uk8wkqaXpa7OA13LO6txQ7+ajZonyc9Ts4K/ugXljevkFTUGBcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script type="module" src="app.js"></script>
+  <script type="module" src="/scripts/app.js"></script>
 </body>
 </html>
