@@ -12,3 +12,15 @@ export function renderBoard(board) {
 export function renderAll(document, data) {
     document.getElementById("board_section").innerHTML = data.boards.map(renderBoard).join('');
 }
+
+export function updateTaskText(target, text) {
+    target.querySelector(".task_text").textContent = text;
+}
+
+export function updateBoardName(target, text) {
+    target.querySelector(".board_name").textContent = text;
+}
+
+export function addTask(target, task) {
+    target.querySelector(".container").insertAdjacentHTML('beforeend', renderTask(task));
+}

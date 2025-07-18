@@ -1,4 +1,4 @@
-import {renderAll} from "./render.js";
+import {renderAll, updateTaskText, updateBoardName, addTask} from "./render.js";
 import {loadData, saveData, deleteData} from "./data.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,27 +10,36 @@ const board_section = document.getElementById("board_section");
 const button_add_board = document.getElementById("add_board");
 const button_del_all = document.getElementById('del_all');
 const button_dropdown = document.getElementById('dropdown');
-const dropdown = document.getElementsByClassName("dropdown")[0];
+const dropdown = document.querySelector(".dropdown");
+const searchInput = document.getElementById("searchInput");
+const theme = document.getElementById("theme");
 
-
+theme.addEventListener('click', handleTheme);
 button_add_board.addEventListener('click', () => handleAddBoard(data));
-button_del_all.addEventListener('click', () => {
-    data = deleteData();
-    board_section.innerHTML = '';
-});
 button_dropdown.addEventListener('click', () => handleDropdownClick(dropdown));
 window.addEventListener('click', (event) => handleWindowClick(event, button_dropdown, dropdown));
 
 window.addEventListener('click', (e) => {
     if (e.target.className === 'add_task') {
-        handleAddTask(data, e.target.closest(".board").id);
+        handleAddTask(data, e.target.closest(".board"));
     }
 });
 
+button_del_all.addEventListener('click', () => {
+    data = deleteData();
+    board_section.innerHTML = '';
+});
+
+searchInput.addEventListener('input', (e) => {
+  const search = e.target.value.trim().toLowerCase();
+  filterTasks(search, data);
+});
+
+if (localStorage.getItem('theme')) setTheme();
 
 const mc = new Hammer.Manager(document, {
   recognizers: [
-    [Hammer.Pan],
+    [Hammer.Pan, { threshold: 5, pointers: 1}],
     [Hammer.Tap, { event: 'doubletap', taps: 2, interval: 300, posThreshold: 10 }]
   ]
 });
@@ -41,6 +50,35 @@ mc.on('panmove', (e) => handlePanMove(e));
 mc.on('panend', (e) => handlePanEnd(e, document, data));
 });
 
+function setTheme() {
+    document.body.classList.toggle('dark-mode');
+}
+
+function handleTheme() {
+    if (!localStorage.getItem('theme')) localStorage.setItem('theme', 1);
+    else localStorage.removeItem('theme');
+    setTheme();
+}
+
+function filterTasks(search, data) {
+  const boards = document.querySelectorAll(".board");
+  
+  boards.forEach(board => {
+    const tasks = board.querySelectorAll(".task");
+    let hasVisibleTasks = false;
+
+    tasks.forEach(task => {
+      const taskText = task.querySelector(".task_text").textContent.toLowerCase();
+      const isMatch = taskText.includes(search);
+      
+      task.style.display = isMatch ? "block" : "none";
+      if (isMatch) hasVisibleTasks = true;
+    });
+
+    // Скрываем пустые доски
+    board.style.display = hasVisibleTasks || !search ? "block" : "none";
+  });
+}
 
 function handlePanStart(e) {
     if (!isValidTarget(e)) return;
@@ -116,7 +154,7 @@ function handleDoubleTap(e, data) {
                 });
             });
             saveData(data);
-            renderAll(document, data);
+            updateTaskText(target, temp);
         }
     } else {
         target = e.target.closest('.board');
@@ -126,7 +164,7 @@ function handleDoubleTap(e, data) {
             const board = findBoardByid(data, target.id);
             board.name = temp;
             saveData(data);
-            renderAll(document, data);
+            updateBoardName(target, temp);
         }
     }
 }
@@ -168,17 +206,18 @@ function handleAddBoard(data) {
     renderAll(document, data);
 }
 
-function handleAddTask(data, id) {
+function handleAddTask(data, target) {
     const text = prompt('Введите текст задачи', '');
     if (!text) return;
         const task = {
         id: idGenerate(),
         text: text,
     }
-    const board = findBoardByid(data, id);
+    const board = findBoardByid(data, target.id);
+    if (!board) return;
     board.tasks.push(task);
     saveData(data);
-    renderAll(document, data);
+    addTask(target, task);
 };
 
 function idGenerate() {
