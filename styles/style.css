@@ -1,15 +1,66 @@
 :root {
-    --main-color: #f5f5f5;
+    --task-color: white;
+    --board-color: #f7f7f7;
+    --button-color: #f5f5f5;
+    --button-hover-color: #dfdfdf;
+    --main-color: white;
+    --font-color: black;
+    --shadow-color: black;
+    --input-color: white;
+    --theme-color: white;
 }
 
+.dark-mode {
+    --task-color: #2d2d2d;
+    --board-color: #1a1a1a;
+    --button-color: #333333;
+    --button-hover-color: #424242;
+    --main-color: #121212;
+    --font-color: #e0e0e0;
+    --shadow-color: #0000004d;
+    --input-color: #454545;
+    --theme-color: #333333;
+}
+
+html, body  {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: var(--board-color);
+    height: 20px;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+}
+#searchInput {
+    border-radius: 10px;
+    border: 1px solid black;
+    position: fixed;
+    background-color: var(--input-color);
+    color: var(--font-color);
+}
+#theme {
+    border-radius: 10px;
+    border: 1px solid black;
+    position: fixed;
+    right: 15px;
+    background-color: var(--theme-color);
+}
+
+body{
+    background-color: var(--main-color);
+    color: var(--font-color);
+}
 .board {
     flex: 1 1 auto;
-    margin: clamp(20px, 5vmin, 100px) 10px;
+    margin: clamp(20px, 5vmin, 40px) 10px;
     text-align: center;
-    box-shadow: 0px 5px 20px -15px;
+    box-shadow: 0px 5px 20px -15px var(--shadow-color);
     border-radius: clamp(4px, 1vw, 10px);
     overflow: auto;
-    background-color: #f7f7f7;
+    background-color: var(--board-color);
 }
 .board_name {
     margin: 5px 0;
@@ -20,16 +71,21 @@
 .board_section{
     display: flex;
     flex-wrap: wrap;
+    padding: 20px 0 0;
 }
 
 .add_task {
     width: calc(100% - 5px);
     margin: 0 0 10px;
-    background-color: white;
+    background-color: var(--task-color);
     border: none;
     border-radius: clamp(4px, 1vw, 10px);
-    box-shadow: 0px 0px 1px 0px;
+    box-shadow: 0px 0px 1px 0px var(--shadow-color);
     font-size: clamp(0.875rem, calc(0.875rem + 0.5vw), 1rem);
+}
+button {
+    background-color: var(--button-color);
+    color: var(--font-color);
 }
 .button {
     width: clamp(30px, 6vmin, 50px);
@@ -39,7 +95,7 @@
     position: relative;
 }
 button:hover {
-    background-color: #dfdfdf;
+    background-color: var(--button-hover-color);
 }
 
 .container {
@@ -65,6 +121,8 @@ button:hover {
 
 img {
     position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     width: clamp(20px, 4vmin, 40px);
     height: clamp(20px, 4vmin, 40px);
@@ -82,14 +140,14 @@ img {
     flex-direction: column-reverse;
     position: fixed;
     right: clamp(10px, 1vmin, 10px);
-    bottom: clamp(45px, 8vmin, 120px);
+    bottom: clamp(45px, 9vmin, 70px);
     gap: clamp(5px, 1vmin, 10px);
 }
 
 .task {
     margin: 0px 5px 10px;
-    background-color: white;
+    background-color: var(--task-color);
     border-radius: clamp(4px, 1vw, 10px);
-    box-shadow: 0px 0px 1px 0px;
+    box-shadow: 0px 0px 1px 0px var(--shadow-color);
     font-size: clamp(0.875rem, calc(0.875rem + 0.5vw), 1rem);
 }
