@@ -1,6 +1,10 @@
 import {renderAll, updateTaskText, updateBoardName, addTask} from "./render.js";
 import {loadData, saveData, deleteData} from "./data.js";
 
+// необходимы для корректной работы panmove
+let target = null; 
+let isDragging = false;
+
 document.addEventListener('DOMContentLoaded', () => {
 
 let data = loadData();
@@ -48,7 +52,16 @@ mc.on('doubletap', (e) => handleDoubleTap(e, data));
 mc.on('panstart', (e) => handlePanStart(e));
 mc.on('panmove', (e) => handlePanMove(e));
 mc.on('panend', (e) => handlePanEnd(e, document, data));
+
+document.addEventListener('touchmove', (e) => {
+  if (isDragging) e.preventDefault();
+}, { passive: false });
 });
+
+
+function toggleUnselectable(enable) {
+    document.body.classList.toggle("unselectable", enable);
+}
 
 function setTheme() {
     document.body.classList.toggle('dark-mode');
@@ -82,50 +95,87 @@ function filterTasks(search, data) {
 
 function handlePanStart(e) {
     if (!isValidTarget(e)) return;
-    const target = getValidTarget(e);
+    isDragging = true;
+    target = getValidTarget(e);
     if (target.closest('.board')) target.parentElement.parentElement.style.overflow = 'visible'; // для board
     target.classList.add('drag');
+    toggleUnselectable(true);
+    target.style.position = 'absolute';
+    target.style.left = `${e.center.x}px`;
+    target.style.top = `${e.center.y + window.scrollY}px`;
 }
 
 function handlePanMove(e) {
-    if (!isValidTarget(e)) return;
-    const target = getValidTarget(e);
-    target.style.transform = `translate(${e.deltaX}px, ${e.deltaY}px)`;
+    if (!target) return;
+    target.style.transform = `translate(${e.deltaX}px, ${e.deltaY+window.scrollY}px)`;
+    autoScrollDuringDrag(e, target);
+}
+
+function autoScrollDuringDrag(e, target) {
+    if (!target || !isDragging) return;
+    
+    const scrollThreshold = 20; // расстояние от края, при котором начинается прокрутка
+    const scrollSpeed = 10; // скорость прокрутки
+    
+    const rect = target.getBoundingClientRect();
+    const elementX = rect.left;
+    const elementY = rect.top;
+    
+    // Проверяем близость к краям окна
+    if (elementX < scrollThreshold) {
+        // Прокрутка влево
+        window.scrollBy(-scrollSpeed, 0);
+    } else if (elementX > window.innerWidth - scrollThreshold) {
+        // Прокрутка вправо
+        window.scrollBy(scrollSpeed, 0);
+    }
+    
+    if (elementY < scrollThreshold) {
+        // Прокрутка вверх
+        window.scrollBy(0, -scrollSpeed);
+    } else if (elementY > window.innerHeight - scrollThreshold) {
+        // Прокрутка вниз
+        window.scrollBy(0, scrollSpeed);
+    }
 }
 
 
 function handlePanEnd(e, document, data) {
-    if (!isValidTarget(e)) return;
-    const target = getValidTarget(e);
-
+    if (!target) return;
+    toggleUnselectable(false);
+    isDragging = false;
     target.style.visibility = 'hidden';
     const elementUnder = document.elementFromPoint(e.center.x, e.center.y);
     target.style.visibility = '';
-    
-    if (target.closest('.task')) {
-        target.parentElement.parentElement.style.overflow = '';
-        const boardUnder = elementUnder.closest(".board")
-        if (boardUnder) {  
-            const boardNew = findBoardByid(data, boardUnder.id);
-            data.boards.find(board => {
-                return board.tasks.find(task => {
-                    if (task.id === target.id) {
-                        const temp = {};
-                        Object.assign(temp, task);
-                        deleteElement(data, target);
-                        boardNew.tasks.push(temp);
-                        return
-                    }
-            })});
-        }   
+    if (elementUnder) {
+        if (target.closest('.task')) {
+            target.parentElement.parentElement.style.overflow = '';
+            const boardUnder = elementUnder.closest(".board")
+            if (boardUnder) {  
+                const boardNew = findBoardByid(data, boardUnder.id);
+                data.boards.find(board => {
+                    return board.tasks.find(task => {
+                        if (task.id === target.id) {
+                            const temp = {};
+                            Object.assign(temp, task);
+                            deleteElement(data, target);
+                            boardNew.tasks.push(temp);
+                            return
+                        }
+                })});
+            }   
+        }
+        
+        if (elementUnder.closest('#dropdown')) {
+            deleteElement(data, target);
+        };
     }
-    
-    if (elementUnder.closest('#dropdown')) {
-        deleteElement(data, target);
-    };
-    
+    target.style.position = '';
+    target.style.left = '';
+    target.style.top = '';
     target.style.transform = '';
     target.classList.remove('drag');
+    target = null;
     saveData(data); 
     renderAll(document, data);
 }
