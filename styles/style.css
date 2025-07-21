@@ -7,7 +7,6 @@
     --font-color: black;
     --shadow-color: black;
     --input-color: white;
-    --theme-color: white;
 }
 
 .dark-mode {
@@ -19,7 +18,6 @@
     --font-color: #e0e0e0;
     --shadow-color: #0000004d;
     --input-color: #454545;
-    --theme-color: #333333;
 }
 
 html, body  {
@@ -43,13 +41,13 @@ header {
     position: fixed;
     background-color: var(--input-color);
     color: var(--font-color);
+    padding-left: 10px;
 }
 #theme {
     border-radius: 10px;
     border: 1px solid black;
     position: fixed;
     right: 15px;
-    background-color: var(--theme-color);
 }
 
 body{
@@ -91,11 +89,11 @@ button {
     color: var(--font-color);
 }
 .button {
-    width: clamp(30px, 6vmin, 50px);
-    height: clamp(30px, 6vmin, 50px);
+    width: clamp(35px, 6vmin, 50px);
+    height: clamp(35px, 6vmin, 50px);
     border-radius: 50%;
-    background-color: var(--main-color);
     position: relative;
+    border: 2px solid var(--shadow-color);
 }
 button:hover {
     background-color: var(--button-hover-color);
@@ -130,8 +128,8 @@ img {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: clamp(20px, 4vmin, 40px);
-    height: clamp(20px, 4vmin, 40px);
+    width: clamp(25px, 4vmin, 40px);
+    height: clamp(25px, 4vmin, 40px);
 }
 
 .menu {
@@ -146,7 +144,7 @@ img {
     flex-direction: column-reverse;
     position: fixed;
     right: clamp(10px, 1vmin, 10px);
-    bottom: clamp(45px, 9vmin, 70px);
+    bottom: clamp(50px, 9vmin, 70px);
     gap: clamp(5px, 1vmin, 10px);
 }
 

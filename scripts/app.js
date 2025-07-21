@@ -102,7 +102,7 @@ function handlePanStart(e) {
     toggleUnselectable(true);
     target.style.position = 'absolute';
     target.style.left = `${e.center.x}px`;
-    target.style.top = `${e.center.y + window.scrollY}px`;
+    target.style.top = `${e.center.y}px`;
 }
 
 function handlePanMove(e) {
