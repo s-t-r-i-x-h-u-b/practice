@@ -167,17 +167,30 @@ function handlePanEnd(e, document, data) {
         }
         
         if (elementUnder.closest('#dropdown')) {
-            deleteElement(data, target);
-        };
+            target.classList.add("delete");
+            setTimeout(() => {
+                deleteElement(data, target);
+                saveData(data);
+                renderAll(document, data);
+                resetTargetStyles(target);
+                target = null;
+            }, 300);
+            return;
+        }
     }
+            
+    resetTargetStyles(target)
+    target = null;
+    saveData(data); 
+    renderAll(document, data);
+}
+
+function resetTargetStyles(target) {
     target.style.position = '';
     target.style.left = '';
     target.style.top = '';
     target.style.transform = '';
     target.classList.remove('drag');
-    target = null;
-    saveData(data); 
-    renderAll(document, data);
 }
 
 function getValidTarget(e) {
@@ -254,6 +267,8 @@ function handleAddBoard(data) {
     data.boards.push(board);
     saveData(data);
     renderAll(document, data);
+
+    animateElementTemporarily(board.id);
 }
 
 function handleAddTask(data, target) {
@@ -268,8 +283,18 @@ function handleAddTask(data, target) {
     board.tasks.push(task);
     saveData(data);
     addTask(target, task);
+
+    animateElementTemporarily(task.id);
 };
 
 function idGenerate() {
     return crypto.randomUUID();
+}
+
+function animateElementTemporarily(id) {
+    const element = document.getElementById(id);
+    element.classList.add('add');
+    setTimeout(() => {
+        element.classList.remove('add');
+    }, 500);
 }

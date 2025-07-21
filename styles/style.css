@@ -165,3 +165,17 @@ img {
     -ms-user-select: none;
     user-select: none;
 }
+
+.delete {
+    transition: opacity 0.3s;
+    opacity: 0;
+}
+
+.add {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
